@@ -4,9 +4,9 @@ using NUnit.Framework;
 [TestFixture("Google Chrome")]
 class LoginTests
 {
-    IWebDriver _driver;
-    Settings settings = new Settings();
-    string browser;
+    private IWebDriver _driver;
+    private Settings settings = new Settings();
+    private string browser;
 
     public LoginTests(string browserType)
     {
@@ -28,6 +28,7 @@ class LoginTests
     {
         LoginPage loginPage = new LoginPage(_driver);
         loginPage.EnterUsername(username);
+        Assert.AreEqual(loginPage.usernameField.GetAttribute("value"), username, "Username does not match expected test case");
     }
 
     [Test]
@@ -36,6 +37,7 @@ class LoginTests
     {
         LoginPage loginPage = new LoginPage(_driver);
         loginPage.EnterPassword(password);
+        Assert.AreEqual(loginPage.passwordField.GetAttribute("value"), password, "Password does not match expected test case");
     }
 
     [Test]
@@ -44,6 +46,8 @@ class LoginTests
         LoginPage loginPage = new LoginPage(_driver);
         loginPage.EnterPassword("123456");
         loginPage.EnterUsername("");
+        loginPage.PressLoginButton();
+        Assert.IsTrue(loginPage.errorButton.Displayed, "Username validation box isn't displayed");
     }
 
     [Test]
@@ -52,6 +56,8 @@ class LoginTests
         LoginPage loginPage = new LoginPage(_driver);
         loginPage.EnterUsername("bob");
         loginPage.EnterPassword("");
+        loginPage.PressLoginButton();
+        Assert.IsTrue(loginPage.errorButton.Displayed, "Password validation box isn't displayed");
     }
 
     [Test]
@@ -69,6 +75,7 @@ class LoginTests
         loginPage.EnterUsername(settings.username);
         loginPage.EnterPassword(settings.password);
         loginPage.Login();
+        Assert.AreEqual(_driver.Url, "https://www.saucedemo.com/inventory.html", "Failed auth, not logged in");
     }
 
     [Test]
@@ -79,6 +86,7 @@ class LoginTests
         loginPage.EnterUsername(username);
         loginPage.EnterPassword(password);
         loginPage.Login();
+        Assert.IsTrue(loginPage.errorButton.Displayed, "Invalid creds box isn't displayed");
     }
 
     [TearDown]
