@@ -5,8 +5,8 @@ using NUnit.Framework;
 class LoginTests
 {
     private IWebDriver _driver;
-    private Settings settings = new Settings();
-    private string browser;
+    private readonly Settings settings = new();
+    private readonly string browser;
 
     public LoginTests(string browserType)
     {
@@ -26,7 +26,7 @@ class LoginTests
     [TestCase("bob")]
     public void EnterUsername(string username)
     {
-        LoginPage loginPage = new LoginPage(_driver);
+        LoginPage loginPage = new(_driver);
         loginPage.EnterUsername(username);
         Assert.AreEqual(loginPage.usernameField.GetAttribute("value"), username, "Username does not match expected test case");
     }
@@ -35,7 +35,7 @@ class LoginTests
     [TestCase("123456")]
     public void EnterPassword(string password)
     {
-        LoginPage loginPage = new LoginPage(_driver);
+        LoginPage loginPage = new(_driver);
         loginPage.EnterPassword(password);
         Assert.AreEqual(loginPage.passwordField.GetAttribute("value"), password, "Password does not match expected test case");
     }
@@ -43,35 +43,37 @@ class LoginTests
     [Test]
     public void MissingUsername()
     {
-        LoginPage loginPage = new LoginPage(_driver);
+        LoginPage loginPage = new(_driver);
         loginPage.EnterPassword("123456");
         loginPage.EnterUsername("");
-        loginPage.PressLoginButton();
-        Assert.IsTrue(loginPage.errorButton.Displayed, "Username validation box isn't displayed");
+        loginPage.Login();
+        Assert.IsTrue(loginPage.errorButton.Displayed, "Validation box isn't displayed");
     }
 
     [Test]
     public void MissingPassword()
     {
-        LoginPage loginPage = new LoginPage(_driver);
+        LoginPage loginPage = new(_driver);
         loginPage.EnterUsername("bob");
         loginPage.EnterPassword("");
-        loginPage.PressLoginButton();
-        Assert.IsTrue(loginPage.errorButton.Displayed, "Password validation box isn't displayed");
+        loginPage.Login();
+        Assert.IsTrue(loginPage.errorButton.Displayed, "Validation box isn't displayed");
     }
 
     [Test]
     public void MissingLoginCreds()
     {
-        LoginPage loginPage = new LoginPage(_driver);
+        LoginPage loginPage = new(_driver);
         loginPage.EnterUsername("");
         loginPage.EnterPassword("");
+        loginPage.Login();
+        Assert.IsTrue(loginPage.errorButton.Displayed, "Validation box isn't displayed");
     }
 
     [Test]
     public void Login()
     {
-        LoginPage loginPage = new LoginPage(_driver);
+        LoginPage loginPage = new(_driver);
         loginPage.EnterUsername(settings.username);
         loginPage.EnterPassword(settings.password);
         loginPage.Login();
@@ -82,7 +84,7 @@ class LoginTests
     [TestCase("bob", "123456")]
     public void InvalidLoginCreds(string username, string password)
     {
-        LoginPage loginPage = new LoginPage(_driver);
+        LoginPage loginPage = new(_driver);
         loginPage.EnterUsername(username);
         loginPage.EnterPassword(password);
         loginPage.Login();

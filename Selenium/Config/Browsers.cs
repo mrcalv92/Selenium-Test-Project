@@ -10,7 +10,7 @@ class Browsers
     public static IWebDriver GetDriver(string browserType)
     {
         IWebDriver _driver;
-        Settings settings = new Settings();
+        Settings settings = new();
         bool headlessMode = settings.headlessMode;
 
         switch (browserType)
@@ -32,8 +32,7 @@ class Browsers
 
             case "Mozilla Firefox":
                 new DriverManager().SetUpDriver(new FirefoxConfig(), VersionResolveStrategy.MatchingBrowser, Architecture.Auto);
-                var firefoxOptions = new FirefoxOptions();
-                firefoxOptions.AcceptInsecureCertificates = true;
+                var firefoxOptions = new FirefoxOptions() { AcceptInsecureCertificates = true };
 
                 if (headlessMode == true)
                 {

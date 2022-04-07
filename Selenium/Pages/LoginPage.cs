@@ -3,8 +3,7 @@ using SeleniumExtras.PageObjects;
 
 class LoginPage
 {
-    private IWebDriver _driver;
-    private Settings settings = new Settings();
+    private readonly IWebDriver _driver;
 
     public LoginPage(IWebDriver newDriver)
     {
@@ -36,11 +35,6 @@ class LoginPage
     public void EnterPassword(string password)
     {
         passwordField.SendKeys(password);
-    }
-
-    public void PressLoginButton()
-    {
-        loginButton.Click();
     }
 
     public void Login()
